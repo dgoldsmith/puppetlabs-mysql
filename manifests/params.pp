@@ -96,7 +96,7 @@ class mysql::params {
         $includedir              = undef
         $pidfile                 = '/var/run/mariadb/mariadb.pid'
         $daemon_dev_package_name = 'mariadb-devel'
-      elsif $provider == 'mysql_community`' {
+      elsif $provider == 'mysql_community' {
         $client_package_name     = 'mysql-commmunity-client-5.6.51'
         $server_package_name     = 'mysql-commmunity-server-5.6.51'
         $server_service_name     = 'mysqld'
