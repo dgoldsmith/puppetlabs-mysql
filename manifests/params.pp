@@ -10,6 +10,7 @@ class mysql::params {
   $restart                = false
   $root_password          = 'UNSET'
   $install_secret_file    = '/.mysql_secret'
+  $override_centos_7      = 'false'
   $server_package_ensure  = 'present'
   $server_package_manage  = true
   $server_service_manage  = true
@@ -24,6 +25,7 @@ class mysql::params {
   # mysql::bindings
   $bindings_enable             = false
   $java_package_ensure         = 'present'
+  $override_centos_7_provider  = undef
   $java_package_provider       = undef
   $perl_package_ensure         = 'present'
   $perl_package_provider       = undef
@@ -59,7 +61,11 @@ class mysql::params {
         }
         /^(RedHat|CentOS|Scientific|OracleLinux)$/: {
           if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
-            $provider = 'mariadb'
+            if $override_centos_7 {
+              $provider = $override_centos_7_provider
+            } else {
+              $provider = 'mariadb'
+            }
             if versioncmp($::operatingsystemmajrelease, '8') >= 0 {
               $xtrabackup_package_name_override = 'percona-xtrabackup-24'
             }
@@ -90,6 +96,16 @@ class mysql::params {
         $includedir              = undef
         $pidfile                 = '/var/run/mariadb/mariadb.pid'
         $daemon_dev_package_name = 'mariadb-devel'
+      if $provider == 'mysql_community`' {
+        $client_package_name     = 'mysql-commmunity-client-5.6.51'
+        $server_package_name     = 'mysql-commmunity-server-5.6.51'
+        $server_service_name     = 'mysqld'
+        $log_error               = '/var/log/mysqld.log'
+        $config_file             = '/etc/my.cnf.d/server.cnf'
+        # mariadb package by default has !includedir set in my.cnf to /etc/my.cnf.d
+        $includedir              = undef
+        $pidfile                 = '/var/run/mysqld/mysqld.pid'
+        $daemon_dev_package_name = 'mysql-community-devel-5.6.51'
       } else {
         $client_package_name     = 'mysql'
         $server_package_name     = 'mysql-server'
