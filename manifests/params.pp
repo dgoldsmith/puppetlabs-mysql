@@ -10,6 +10,7 @@ class mysql::params {
   $restart                = false
   $root_password          = 'UNSET'
   $install_secret_file    = '/.mysql_secret'
+  $override_centos_7      = 'false'
   $server_package_ensure  = 'present'
   $server_package_manage  = true
   $server_service_manage  = true
@@ -25,6 +26,7 @@ class mysql::params {
   $bindings_enable             = false
   $java_package_ensure         = 'present'
   $java_package_provider       = undef
+  $override_centos_7_provider  = undef
   $perl_package_ensure         = 'present'
   $perl_package_provider       = undef
   $php_package_ensure          = 'present'
@@ -59,7 +61,11 @@ class mysql::params {
         }
         /^(RedHat|CentOS|Scientific|OracleLinux)$/: {
           if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
-            $provider = 'mariadb'
+            if $override_centos_7 {
+              $provider = $override_centos_7_provider
+            } else {
+              $provider = 'mariadb'
+            }
             if versioncmp($::operatingsystemmajrelease, '8') >= 0 {
               $xtrabackup_package_name_override = 'percona-xtrabackup-24'
             }
