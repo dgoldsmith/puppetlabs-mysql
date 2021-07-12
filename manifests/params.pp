@@ -96,6 +96,16 @@ class mysql::params {
         $includedir              = undef
         $pidfile                 = '/var/run/mariadb/mariadb.pid'
         $daemon_dev_package_name = 'mariadb-devel'
+      elsif $provider == 'myslq-community' {
+        $client_package_name     = 'mysql-community-client'
+        $server_package_name     = 'mysql-community-server'
+        $server_service_name     = 'mysqld'
+        $log_error               = '/var/log/mysqld.log'
+        $config_file             = '/etc/my.cnf.d/server.cnf'
+        # mysql-community package by default has !includedir set in my.cnf to /etc/my.cnf.d
+        $includedir              = undef
+        $pidfile                 = '/var/run/mysqld/mysqld.pid'
+        $daemon_dev_package_name = 'mariadb-devel'
       } else {
         $client_package_name     = 'mysql'
         $server_package_name     = 'mysql-server'
